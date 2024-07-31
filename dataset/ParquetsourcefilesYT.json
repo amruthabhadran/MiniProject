@@ -1,5 +1,5 @@
 {
-	"name": "Parquetsourcefiles",
+	"name": "ParquetsourcefilesYT",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "stgminiproject",
@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "yellow_tripdata_2024-02.parquet",
+				"fileName": "yellow_tripdata_2023-01.parquet",
 				"container": "parquetfiles"
 			},
 			"compressionCodec": "snappy"
