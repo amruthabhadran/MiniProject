@@ -1,5 +1,5 @@
 {
-	"name": "dataflow1",
+	"name": "ETL_DF_Trip_Load",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -47,6 +47,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "GreenTaxidataTbl"
+				},
+				{
+					"dataset": {
+						"referenceName": "FHHVTripDataTbl",
+						"type": "DatasetReference"
+					},
+					"name": "FHHVTaxidataTbl"
 				}
 			],
 			"transformations": [],
@@ -166,7 +173,17 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> GreenTaxidataTbl"
+				"     errorHandlingOption: 'stopOnFirstError') ~> GreenTaxidataTbl",
+				"FHHVTaxi sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> FHHVTaxidataTbl"
 			]
 		}
 	}
