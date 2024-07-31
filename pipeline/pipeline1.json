@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "dataflow1",
+						"referenceName": "ETL_DF_Trip_Load",
 						"type": "DataFlowReference"
 					},
 					"compute": {
