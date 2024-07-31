@@ -40,258 +40,207 @@
 							{
 								"source": {
 									"name": "VendorID",
-									"type": "Int64",
-									"physicalType": "INT64"
+									"type": "Int64"
 								},
 								"sink": {
 									"name": "VendorID",
-									"type": "Int64",
-									"physicalType": "bigint"
+									"type": "Int64"
 								}
 							},
 							{
 								"source": {
-									"name": "lpep_pickup_datetime",
-									"physicalType": "TIMESTAMP_MICROS"
+									"name": "lpep_pickup_datetime"
 								},
 								"sink": {
 									"name": "lpep_pickup_datetime",
-									"type": "Int64",
-									"physicalType": "bigint"
+									"type": "Int64"
 								}
 							},
 							{
 								"source": {
-									"name": "lpep_dropoff_datetime",
-									"physicalType": "TIMESTAMP_MICROS"
+									"name": "lpep_dropoff_datetime"
 								},
 								"sink": {
 									"name": "lpep_dropoff_datetime",
-									"type": "Int64",
-									"physicalType": "bigint"
+									"type": "Int64"
 								}
 							},
 							{
 								"source": {
 									"name": "store_and_fwd_flag",
-									"type": "String",
-									"physicalType": "UTF8"
+									"type": "String"
 								},
 								"sink": {
 									"name": "store_and_fwd_flag",
-									"type": "String",
-									"physicalType": "nvarchar"
+									"type": "String"
 								}
 							},
 							{
 								"source": {
 									"name": "RatecodeID",
-									"type": "Double",
-									"physicalType": "DOUBLE"
+									"type": "Double"
 								},
 								"sink": {
 									"name": "RatecodeID",
-									"type": "Double",
-									"physicalType": "float"
+									"type": "Double"
 								}
 							},
 							{
 								"source": {
 									"name": "PULocationID",
-									"type": "Int64",
-									"physicalType": "INT64"
+									"type": "Int64"
 								},
 								"sink": {
 									"name": "PULocationID",
-									"type": "Int64",
-									"physicalType": "bigint"
+									"type": "Int64"
 								}
 							},
 							{
 								"source": {
 									"name": "DOLocationID",
-									"type": "Int64",
-									"physicalType": "INT64"
+									"type": "Int64"
 								},
 								"sink": {
 									"name": "DOLocationID",
-									"type": "Int64",
-									"physicalType": "bigint"
+									"type": "Int64"
 								}
 							},
 							{
 								"source": {
 									"name": "passenger_count",
-									"type": "Double",
-									"physicalType": "DOUBLE"
+									"type": "Double"
 								},
 								"sink": {
 									"name": "passenger_count",
-									"type": "Double",
-									"physicalType": "float"
+									"type": "Double"
 								}
 							},
 							{
 								"source": {
 									"name": "trip_distance",
-									"type": "Double",
-									"physicalType": "DOUBLE"
+									"type": "Double"
 								},
 								"sink": {
 									"name": "trip_distance",
-									"type": "Double",
-									"physicalType": "float"
+									"type": "Double"
 								}
 							},
 							{
 								"source": {
 									"name": "fare_amount",
-									"type": "Double",
-									"physicalType": "DOUBLE"
+									"type": "Double"
 								},
 								"sink": {
 									"name": "fare_amount",
-									"type": "Double",
-									"physicalType": "float"
+									"type": "Double"
 								}
 							},
 							{
 								"source": {
 									"name": "extra",
-									"type": "Double",
-									"physicalType": "DOUBLE"
+									"type": "Double"
 								},
 								"sink": {
 									"name": "extra",
-									"type": "Double",
-									"physicalType": "float"
+									"type": "Double"
 								}
 							},
 							{
 								"source": {
 									"name": "mta_tax",
-									"type": "Double",
-									"physicalType": "DOUBLE"
+									"type": "Double"
 								},
 								"sink": {
 									"name": "mta_tax",
-									"type": "Double",
-									"physicalType": "float"
+									"type": "Double"
 								}
 							},
 							{
 								"source": {
 									"name": "tip_amount",
-									"type": "Double",
-									"physicalType": "DOUBLE"
+									"type": "Double"
 								},
 								"sink": {
 									"name": "tip_amount",
-									"type": "Double",
-									"physicalType": "float"
+									"type": "Double"
 								}
 							},
 							{
 								"source": {
 									"name": "tolls_amount",
-									"type": "Double",
-									"physicalType": "DOUBLE"
+									"type": "Double"
 								},
 								"sink": {
 									"name": "tolls_amount",
-									"type": "Double",
-									"physicalType": "float"
+									"type": "Double"
 								}
 							},
 							{
 								"source": {
 									"name": "ehail_fee",
-									"type": "Int32",
-									"physicalType": "INT32"
+									"type": "Int32"
 								},
 								"sink": {
 									"name": "ehail_fee",
-									"type": "Int32",
-									"physicalType": "int"
+									"type": "Int32"
 								}
 							},
 							{
 								"source": {
 									"name": "improvement_surcharge",
-									"type": "Double",
-									"physicalType": "DOUBLE"
+									"type": "Double"
 								},
 								"sink": {
 									"name": "improvement_surcharge",
-									"type": "Double",
-									"physicalType": "float"
+									"type": "Double"
 								}
 							},
 							{
 								"source": {
 									"name": "total_amount",
-									"type": "Double",
-									"physicalType": "DOUBLE"
+									"type": "Double"
 								},
 								"sink": {
 									"name": "total_amount",
-									"type": "Double",
-									"physicalType": "float"
+									"type": "Double"
 								}
 							},
 							{
 								"source": {
 									"name": "payment_type",
-									"type": "Double",
-									"physicalType": "DOUBLE"
+									"type": "Double"
 								},
 								"sink": {
 									"name": "payment_type",
-									"type": "Double",
-									"physicalType": "float"
+									"type": "Double"
 								}
 							},
 							{
 								"source": {
 									"name": "trip_type",
-									"type": "Double",
-									"physicalType": "DOUBLE"
+									"type": "Double"
 								},
 								"sink": {
 									"name": "trip_type",
-									"type": "Double",
-									"physicalType": "float"
+									"type": "Double"
 								}
 							},
 							{
 								"source": {
 									"name": "congestion_surcharge",
-									"type": "Double",
-									"physicalType": "DOUBLE"
+									"type": "Double"
 								},
 								"sink": {
 									"name": "congestion_surcharge",
-									"type": "Double",
-									"physicalType": "float"
+									"type": "Double"
 								}
 							}
-						],
-						"typeConversion": true,
-						"typeConversionSettings": {
-							"allowDataTruncation": true,
-							"treatBooleanAsNumber": false
-						}
+						]
 					}
 				},
 				"inputs": [
 					{
 						"referenceName": "ParquetsourcefilesYT",
-						"type": "DatasetReference"
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "PassengerDB",
 						"type": "DatasetReference"
 					}
 				]
