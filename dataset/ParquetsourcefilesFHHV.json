@@ -1,0 +1,117 @@
+{
+	"name": "ParquetsourcefilesFHHV",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "stgminiproject",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "fhvhv_tripdata_2023-01.parquet",
+				"container": "parquetfiles"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "hvfhs_license_num",
+				"type": "UTF8"
+			},
+			{
+				"name": "dispatching_base_num",
+				"type": "UTF8"
+			},
+			{
+				"name": "originating_base_num",
+				"type": "UTF8"
+			},
+			{
+				"name": "request_datetime",
+				"type": "TIMESTAMP_MICROS"
+			},
+			{
+				"name": "on_scene_datetime",
+				"type": "TIMESTAMP_MICROS"
+			},
+			{
+				"name": "pickup_datetime",
+				"type": "TIMESTAMP_MICROS"
+			},
+			{
+				"name": "dropoff_datetime",
+				"type": "TIMESTAMP_MICROS"
+			},
+			{
+				"name": "PULocationID",
+				"type": "INT64"
+			},
+			{
+				"name": "DOLocationID",
+				"type": "INT64"
+			},
+			{
+				"name": "trip_miles",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "trip_time",
+				"type": "INT64"
+			},
+			{
+				"name": "base_passenger_fare",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "tolls",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "bcf",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "sales_tax",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "congestion_surcharge",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "airport_fee",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "tips",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "driver_pay",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "shared_request_flag",
+				"type": "UTF8"
+			},
+			{
+				"name": "shared_match_flag",
+				"type": "UTF8"
+			},
+			{
+				"name": "access_a_ride_flag",
+				"type": "UTF8"
+			},
+			{
+				"name": "wav_request_flag",
+				"type": "UTF8"
+			},
+			{
+				"name": "wav_match_flag",
+				"type": "UTF8"
+			}
+		]
+	}
+}

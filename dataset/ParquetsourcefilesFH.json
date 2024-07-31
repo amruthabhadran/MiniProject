@@ -1,0 +1,49 @@
+{
+	"name": "ParquetsourcefilesFH",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "stgminiproject",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "fhv_tripdata_2023-01.parquet",
+				"container": "parquetfiles"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "dispatching_base_num",
+				"type": "UTF8"
+			},
+			{
+				"name": "pickup_datetime",
+				"type": "TIMESTAMP_MICROS"
+			},
+			{
+				"name": "dropOff_datetime",
+				"type": "TIMESTAMP_MICROS"
+			},
+			{
+				"name": "PUlocationID",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "DOlocationID",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "SR_Flag",
+				"type": "INT32"
+			},
+			{
+				"name": "Affiliated_base_number",
+				"type": "UTF8"
+			}
+		]
+	}
+}

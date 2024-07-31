@@ -17,6 +17,20 @@
 						"type": "DatasetReference"
 					},
 					"name": "GreenTaxi"
+				},
+				{
+					"dataset": {
+						"referenceName": "ParquetsourcefilesFHHV",
+						"type": "DatasetReference"
+					},
+					"name": "FHHVTaxi"
+				},
+				{
+					"dataset": {
+						"referenceName": "ParquetsourcefilesFH",
+						"type": "DatasetReference"
+					},
+					"name": "FHTaxi"
 				}
 			],
 			"sinks": [
@@ -90,6 +104,49 @@
 				"     ignoreNoFilesFound: false,",
 				"     format: 'parquet',",
 				"     partitionBy('hash', 1)) ~> GreenTaxi",
+				"source(output(",
+				"          hvfhs_license_num as string,",
+				"          dispatching_base_num as string,",
+				"          originating_base_num as string,",
+				"          request_datetime as timestamp,",
+				"          on_scene_datetime as timestamp,",
+				"          pickup_datetime as timestamp,",
+				"          dropoff_datetime as timestamp,",
+				"          PULocationID as long,",
+				"          DOLocationID as long,",
+				"          trip_miles as double,",
+				"          trip_time as long,",
+				"          base_passenger_fare as double,",
+				"          tolls as double,",
+				"          bcf as double,",
+				"          sales_tax as double,",
+				"          congestion_surcharge as double,",
+				"          airport_fee as double,",
+				"          tips as double,",
+				"          driver_pay as double,",
+				"          shared_request_flag as string,",
+				"          shared_match_flag as string,",
+				"          access_a_ride_flag as string,",
+				"          wav_request_flag as string,",
+				"          wav_match_flag as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> FHHVTaxi",
+				"source(output(",
+				"          dispatching_base_num as string,",
+				"          pickup_datetime as timestamp,",
+				"          dropOff_datetime as timestamp,",
+				"          PUlocationID as double,",
+				"          DOlocationID as double,",
+				"          SR_Flag as integer,",
+				"          Affiliated_base_number as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> FHTaxi",
 				"YellowTaxi sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
