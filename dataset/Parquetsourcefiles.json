@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "green_tripdata_2023-01.parquet",
+				"fileName": "yellow_tripdata_2024-02.parquet",
 				"container": "parquetfiles"
 			},
 			"compressionCodec": "snappy"
