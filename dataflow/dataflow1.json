@@ -1,0 +1,116 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ParquetsourcefilesYT",
+						"type": "DatasetReference"
+					},
+					"name": "YellowTaxi"
+				},
+				{
+					"dataset": {
+						"referenceName": "ParquetsourcefilesGT",
+						"type": "DatasetReference"
+					},
+					"name": "GreenTaxi"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "YellowTripDataTbl",
+						"type": "DatasetReference"
+					},
+					"name": "YelloTripdataTbl"
+				},
+				{
+					"dataset": {
+						"referenceName": "GreenTripDataTbl",
+						"type": "DatasetReference"
+					},
+					"name": "GreenTaxidataTbl"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          VendorID as long,",
+				"          tpep_pickup_datetime as timestamp,",
+				"          tpep_dropoff_datetime as timestamp,",
+				"          passenger_count as double,",
+				"          trip_distance as double,",
+				"          RatecodeID as double,",
+				"          store_and_fwd_flag as string,",
+				"          PULocationID as long,",
+				"          DOLocationID as long,",
+				"          payment_type as long,",
+				"          fare_amount as double,",
+				"          extra as double,",
+				"          mta_tax as double,",
+				"          tip_amount as double,",
+				"          tolls_amount as double,",
+				"          improvement_surcharge as double,",
+				"          total_amount as double,",
+				"          congestion_surcharge as double,",
+				"          airport_fee as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet',",
+				"     partitionBy('hash', 1)) ~> YellowTaxi",
+				"source(output(",
+				"          VendorID as long,",
+				"          lpep_pickup_datetime as timestamp,",
+				"          lpep_dropoff_datetime as timestamp,",
+				"          store_and_fwd_flag as string,",
+				"          RatecodeID as double,",
+				"          PULocationID as long,",
+				"          DOLocationID as long,",
+				"          passenger_count as double,",
+				"          trip_distance as double,",
+				"          fare_amount as double,",
+				"          extra as double,",
+				"          mta_tax as double,",
+				"          tip_amount as double,",
+				"          tolls_amount as double,",
+				"          ehail_fee as integer,",
+				"          improvement_surcharge as double,",
+				"          total_amount as double,",
+				"          payment_type as double,",
+				"          trip_type as double,",
+				"          congestion_surcharge as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet',",
+				"     partitionBy('hash', 1)) ~> GreenTaxi",
+				"YellowTaxi sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> YelloTripdataTbl",
+				"GreenTaxi sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> GreenTaxidataTbl"
+			]
+		}
+	}
+}
