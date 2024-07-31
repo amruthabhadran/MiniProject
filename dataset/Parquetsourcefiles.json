@@ -1,0 +1,41 @@
+{
+	"name": "Parquetsourcefiles",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "stgminiproject",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "yellow_tripdata_2024-02.parquet",
+				"container": "parquetfiles"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "sepal.length",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "sepal.width",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "petal.length",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "petal.width",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "variety",
+				"type": "UTF8"
+			}
+		]
+	}
+}
