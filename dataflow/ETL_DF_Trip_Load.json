@@ -54,6 +54,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "FHHVTaxidataTbl"
+				},
+				{
+					"dataset": {
+						"referenceName": "HVTripDataTbl",
+						"type": "DatasetReference"
+					},
+					"name": "FHTaxidataTbl"
 				}
 			],
 			"transformations": [],
@@ -183,7 +190,17 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> FHHVTaxidataTbl"
+				"     errorHandlingOption: 'stopOnFirstError') ~> FHHVTaxidataTbl",
+				"FHTaxi sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> FHTaxidataTbl"
 			]
 		}
 	}
