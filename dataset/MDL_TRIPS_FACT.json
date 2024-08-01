@@ -1,0 +1,89 @@
+{
+	"name": "MDL_TRIPS_FACT",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "TRIP_ID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "PICKUP_DATETIME",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "DROPOFF_DATETIME",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "PICKUP_DATE",
+				"type": "date"
+			},
+			{
+				"name": "DROPOFF_DATE",
+				"type": "date"
+			},
+			{
+				"name": "PASSENGER_COUNT",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "TRIP_DISTANCE",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 8
+			},
+			{
+				"name": "PICKUP_LOCATION_ID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "DROPOFF_LOCATION_ID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "FARE_AMOUNT",
+				"type": "decimal",
+				"precision": 20,
+				"scale": 8
+			},
+			{
+				"name": "TIP_AMOUNT",
+				"type": "decimal",
+				"precision": 20,
+				"scale": 8
+			},
+			{
+				"name": "TOTAL_AMOUNT",
+				"type": "decimal",
+				"precision": 20,
+				"scale": 8
+			},
+			{
+				"name": "TRIP_SRC",
+				"type": "varchar"
+			},
+			{
+				"name": "LOAD_DATE",
+				"type": "date"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "TRIPS_FACT"
+		}
+	}
+}

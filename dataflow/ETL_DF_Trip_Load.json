@@ -61,11 +61,21 @@
 						"type": "DatasetReference"
 					},
 					"name": "FHTaxidataTbl"
+				},
+				{
+					"dataset": {
+						"referenceName": "MDL_TRIPS_FACT",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
 				}
 			],
 			"transformations": [
 				{
 					"name": "select1"
+				},
+				{
+					"name": "derivedColumn1"
 				}
 			],
 			"scriptLines": [
@@ -178,6 +188,10 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 derive(TRIP_SRC = 'YELLOW TAXI',",
+				"          LOAD_DATE = currentDate('YYYY-MM-DD'),",
+				"          PICKUP_DATE = toDate(toString(PICKUP_DATETIME, 'YYYY-MM-DD'),'YYYY-MM-DD'),",
+				"          DROPOFF_DATE = toDate(toString(DROPOFF_DATETIME, 'YYYY-MM-DD'),'YYYY-MM-DD')) ~> derivedColumn1",
 				"YellowTaxi sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
@@ -219,7 +233,33 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> FHTaxidataTbl"
+				"     errorHandlingOption: 'stopOnFirstError') ~> FHTaxidataTbl",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          TRIP_ID as integer,",
+				"          PICKUP_DATETIME as timestamp,",
+				"          DROPOFF_DATETIME as timestamp,",
+				"          PICKUP_DATE as date,",
+				"          DROPOFF_DATE as date,",
+				"          PASSENGER_COUNT as integer,",
+				"          TRIP_DISTANCE as decimal(10,8),",
+				"          PICKUP_LOCATION_ID as integer,",
+				"          DROPOFF_LOCATION_ID as integer,",
+				"          FARE_AMOUNT as decimal(20,8),",
+				"          TIP_AMOUNT as decimal(20,8),",
+				"          TOTAL_AMOUNT as decimal(20,8),",
+				"          TRIP_SRC as string,",
+				"          LOAD_DATE as date",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
 			]
 		}
 	}
