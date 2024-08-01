@@ -1,5 +1,5 @@
 {
-	"name": "Copy source files",
+	"name": "Copy location file",
 	"properties": {
 		"activities": [
 			{
