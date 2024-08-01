@@ -16,22 +16,20 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "ParquetSource",
+						"type": "DelimitedTextSource",
 						"storeSettings": {
 							"type": "AzureBlobStorageReadSettings",
 							"recursive": true,
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
-							"type": "ParquetReadSettings"
+							"type": "DelimitedTextReadSettings"
 						}
 					},
 					"sink": {
 						"type": "AzureSqlSink",
 						"writeBehavior": "insert",
-						"sqlWriterUseTableLock": false,
-						"tableOption": "autoCreate",
-						"disableMetricsCollection": false
+						"sqlWriterUseTableLock": false
 					},
 					"enableStaging": false,
 					"translator": {
@@ -39,208 +37,69 @@
 						"mappings": [
 							{
 								"source": {
-									"name": "VendorID",
-									"type": "Int64"
+									"name": "LocationID",
+									"type": "String",
+									"physicalType": "String"
 								},
 								"sink": {
-									"name": "VendorID",
-									"type": "Int64"
+									"name": "LOCATION_ID",
+									"type": "Int32",
+									"physicalType": "int"
 								}
 							},
 							{
 								"source": {
-									"name": "lpep_pickup_datetime"
+									"name": "Borough",
+									"type": "String",
+									"physicalType": "String"
 								},
 								"sink": {
-									"name": "lpep_pickup_datetime",
-									"type": "Int64"
+									"name": "BOROUGH",
+									"type": "String",
+									"physicalType": "varchar"
 								}
 							},
 							{
 								"source": {
-									"name": "lpep_dropoff_datetime"
+									"name": "Zone",
+									"type": "String",
+									"physicalType": "String"
 								},
 								"sink": {
-									"name": "lpep_dropoff_datetime",
-									"type": "Int64"
+									"name": "ZONE_T",
+									"type": "String",
+									"physicalType": "varchar"
 								}
 							},
 							{
 								"source": {
-									"name": "store_and_fwd_flag",
-									"type": "String"
+									"name": "service_zone",
+									"type": "String",
+									"physicalType": "String"
 								},
 								"sink": {
-									"name": "store_and_fwd_flag",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "RatecodeID",
-									"type": "Double"
-								},
-								"sink": {
-									"name": "RatecodeID",
-									"type": "Double"
-								}
-							},
-							{
-								"source": {
-									"name": "PULocationID",
-									"type": "Int64"
-								},
-								"sink": {
-									"name": "PULocationID",
-									"type": "Int64"
-								}
-							},
-							{
-								"source": {
-									"name": "DOLocationID",
-									"type": "Int64"
-								},
-								"sink": {
-									"name": "DOLocationID",
-									"type": "Int64"
-								}
-							},
-							{
-								"source": {
-									"name": "passenger_count",
-									"type": "Double"
-								},
-								"sink": {
-									"name": "passenger_count",
-									"type": "Double"
-								}
-							},
-							{
-								"source": {
-									"name": "trip_distance",
-									"type": "Double"
-								},
-								"sink": {
-									"name": "trip_distance",
-									"type": "Double"
-								}
-							},
-							{
-								"source": {
-									"name": "fare_amount",
-									"type": "Double"
-								},
-								"sink": {
-									"name": "fare_amount",
-									"type": "Double"
-								}
-							},
-							{
-								"source": {
-									"name": "extra",
-									"type": "Double"
-								},
-								"sink": {
-									"name": "extra",
-									"type": "Double"
-								}
-							},
-							{
-								"source": {
-									"name": "mta_tax",
-									"type": "Double"
-								},
-								"sink": {
-									"name": "mta_tax",
-									"type": "Double"
-								}
-							},
-							{
-								"source": {
-									"name": "tip_amount",
-									"type": "Double"
-								},
-								"sink": {
-									"name": "tip_amount",
-									"type": "Double"
-								}
-							},
-							{
-								"source": {
-									"name": "tolls_amount",
-									"type": "Double"
-								},
-								"sink": {
-									"name": "tolls_amount",
-									"type": "Double"
-								}
-							},
-							{
-								"source": {
-									"name": "ehail_fee",
-									"type": "Int32"
-								},
-								"sink": {
-									"name": "ehail_fee",
-									"type": "Int32"
-								}
-							},
-							{
-								"source": {
-									"name": "improvement_surcharge",
-									"type": "Double"
-								},
-								"sink": {
-									"name": "improvement_surcharge",
-									"type": "Double"
-								}
-							},
-							{
-								"source": {
-									"name": "total_amount",
-									"type": "Double"
-								},
-								"sink": {
-									"name": "total_amount",
-									"type": "Double"
-								}
-							},
-							{
-								"source": {
-									"name": "payment_type",
-									"type": "Double"
-								},
-								"sink": {
-									"name": "payment_type",
-									"type": "Double"
-								}
-							},
-							{
-								"source": {
-									"name": "trip_type",
-									"type": "Double"
-								},
-								"sink": {
-									"name": "trip_type",
-									"type": "Double"
-								}
-							},
-							{
-								"source": {
-									"name": "congestion_surcharge",
-									"type": "Double"
-								},
-								"sink": {
-									"name": "congestion_surcharge",
-									"type": "Double"
+									"name": "SERVICE_ZONE",
+									"type": "String",
+									"physicalType": "varchar"
 								}
 							}
-						]
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
 					}
 				},
 				"inputs": [
 					{
-						"referenceName": "ParquetsourcefilesYT",
+						"referenceName": "Locationsrcfile",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "LOCATION_DIM",
 						"type": "DatasetReference"
 					}
 				]
