@@ -1,0 +1,84 @@
+CREATE TABLE [dbo].[YellowTripData](
+	[VendorID] [bigint] NULL,
+	[tpep_pickup_datetime] [datetime2](7) NULL,
+	[tpep_dropoff_datetime] [datetime2](7) NULL,
+	[passenger_count] [float] NULL,
+	[trip_distance] [float] NULL,
+	[RatecodeID] [float] NULL,
+	[store_and_fwd_flag] [nvarchar](max) NULL,
+	[PULocationID] [bigint] NULL,
+	[DOLocationID] [bigint] NULL,
+	[payment_type] [bigint] NULL,
+	[fare_amount] [float] NULL,
+	[extra] [float] NULL,
+	[mta_tax] [float] NULL,
+	[tip_amount] [float] NULL,
+	[tolls_amount] [float] NULL,
+	[improvement_surcharge] [float] NULL,
+	[total_amount] [float] NULL,
+	[congestion_surcharge] [float] NULL,
+	[airport_fee] [float] NULL
+) 
+
+
+CREATE TABLE [dbo].[GreenTripData](
+	[VendorID] [bigint] NULL,
+	[lpep_pickup_datetime] [datetime2](7) NULL,
+	[lpep_dropoff_datetime] [datetime2](7) NULL,
+	[store_and_fwd_flag] [nvarchar](max) NULL,
+	[RatecodeID] [float] NULL,
+	[PULocationID] [bigint] NULL,
+	[DOLocationID] [bigint] NULL,
+	[passenger_count] [float] NULL,
+	[trip_distance] [float] NULL,
+	[fare_amount] [float] NULL,
+	[extra] [float] NULL,
+	[mta_tax] [float] NULL,
+	[tip_amount] [float] NULL,
+	[tolls_amount] [float] NULL,
+	[ehail_fee] [int] NULL,
+	[improvement_surcharge] [float] NULL,
+	[total_amount] [float] NULL,
+	[payment_type] [float] NULL,
+	[trip_type] [float] NULL,
+	[congestion_surcharge] [float] NULL
+)
+
+
+CREATE TABLE [dbo].[FHHVTripData](
+	[hvfhs_license_num] [nvarchar](max) NULL,
+	[dispatching_base_num] [nvarchar](max) NULL,
+	[originating_base_num] [nvarchar](max) NULL,
+	[request_datetime] [datetime2](7) NULL,
+	[on_scene_datetime] [datetime2](7) NULL,
+	[pickup_datetime] [datetime2](7) NULL,
+	[dropoff_datetime] [datetime2](7) NULL,
+	[PULocationID] [bigint] NULL,
+	[DOLocationID] [bigint] NULL,
+	[trip_miles] [float] NULL,
+	[trip_time] [bigint] NULL,
+	[base_passenger_fare] [float] NULL,
+	[tolls] [float] NULL,
+	[bcf] [float] NULL,
+	[sales_tax] [float] NULL,
+	[congestion_surcharge] [float] NULL,
+	[airport_fee] [float] NULL,
+	[tips] [float] NULL,
+	[driver_pay] [float] NULL,
+	[shared_request_flag] [nvarchar](max) NULL,
+	[shared_match_flag] [nvarchar](max) NULL,
+	[access_a_ride_flag] [nvarchar](max) NULL,
+	[wav_request_flag] [nvarchar](max) NULL,
+	[wav_match_flag] [nvarchar](max) NULL
+)
+
+CREATE TABLE [dbo].[HVTripData](
+	[dispatching_base_num] [nvarchar](max) NULL,
+	[pickup_datetime] [datetime2](7) NULL,
+	[dropOff_datetime] [datetime2](7) NULL,
+	[PUlocationID] [float] NULL,
+	[DOlocationID] [float] NULL,
+	[SR_Flag] [int] NULL,
+	[Affiliated_base_number] [nvarchar](max) NULL
+)
+
