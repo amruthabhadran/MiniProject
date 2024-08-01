@@ -1,0 +1,1094 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adfminiproject1"
+		},
+		"AzureSqlDatabase_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase'"
+		},
+		"stgminiproject_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'stgminiproject'"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy location file')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "LocationID",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "LOCATION_ID",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "Borough",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "BOROUGH",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Zone",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "ZONE_T",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "service_zone",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "SERVICE_ZONE",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Locationsrcfile",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "LOCATION_DIM",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Locationsrcfile')]",
+				"[concat(variables('factoryId'), '/datasets/LOCATION_DIM')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "dataflow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "ETL_DF_Trip_Load",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"YellowTaxi": {},
+									"GreenTaxi": {},
+									"FHHVTaxi": {},
+									"FHTaxi": {},
+									"YelloTripdataTbl": {},
+									"GreenTaxidataTbl": {},
+									"FHHVTaxidataTbl": {},
+									"FHTaxidataTbl": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/ETL_DF_Trip_Load')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FHHVTripDataTbl')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "FHHVTripData"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/GreenTripDataTbl')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "GreenTripData"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/HVTripDataTbl')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "HVTripData"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LOCATION_DIM')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "LOCATION_ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "BOROUGH",
+						"type": "varchar"
+					},
+					{
+						"name": "ZONE_T",
+						"type": "varchar"
+					},
+					{
+						"name": "SERVICE_ZONE",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "LOCATION_DIM"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Locationsrcfile')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "stgminiproject",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "taxi_zone_lookup.csv",
+						"container": "parquetfiles"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "LocationID",
+						"type": "String"
+					},
+					{
+						"name": "Borough",
+						"type": "String"
+					},
+					{
+						"name": "Zone",
+						"type": "String"
+					},
+					{
+						"name": "service_zone",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/stgminiproject')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MDL_TRIPS_FACT')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "TRIP_ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "PICKUP_DATETIME",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "DROPOFF_DATETIME",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "PICKUP_DATE",
+						"type": "date"
+					},
+					{
+						"name": "DROPOFF_DATE",
+						"type": "date"
+					},
+					{
+						"name": "PASSENGER_COUNT",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "TRIP_DISTANCE",
+						"type": "decimal",
+						"precision": 10,
+						"scale": 8
+					},
+					{
+						"name": "PICKUP_LOCATION_ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DROPOFF_LOCATION_ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "FARE_AMOUNT",
+						"type": "decimal",
+						"precision": 20,
+						"scale": 8
+					},
+					{
+						"name": "TIP_AMOUNT",
+						"type": "decimal",
+						"precision": 20,
+						"scale": 8
+					},
+					{
+						"name": "TOTAL_AMOUNT",
+						"type": "decimal",
+						"precision": 20,
+						"scale": 8
+					},
+					{
+						"name": "TRIP_SRC",
+						"type": "varchar"
+					},
+					{
+						"name": "LOAD_DATE",
+						"type": "date"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "TRIPS_FACT"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ParquetsourcefilesFH')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "stgminiproject",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "fhv_tripdata_2023-01.parquet",
+						"container": "parquetfiles"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "dispatching_base_num",
+						"type": "UTF8"
+					},
+					{
+						"name": "pickup_datetime",
+						"type": "TIMESTAMP_MICROS"
+					},
+					{
+						"name": "dropOff_datetime",
+						"type": "TIMESTAMP_MICROS"
+					},
+					{
+						"name": "PUlocationID",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "DOlocationID",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "SR_Flag",
+						"type": "INT32"
+					},
+					{
+						"name": "Affiliated_base_number",
+						"type": "UTF8"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/stgminiproject')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ParquetsourcefilesFHHV')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "stgminiproject",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "fhvhv_tripdata_2023-01.parquet",
+						"container": "parquetfiles"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "hvfhs_license_num",
+						"type": "UTF8"
+					},
+					{
+						"name": "dispatching_base_num",
+						"type": "UTF8"
+					},
+					{
+						"name": "originating_base_num",
+						"type": "UTF8"
+					},
+					{
+						"name": "request_datetime",
+						"type": "TIMESTAMP_MICROS"
+					},
+					{
+						"name": "on_scene_datetime",
+						"type": "TIMESTAMP_MICROS"
+					},
+					{
+						"name": "pickup_datetime",
+						"type": "TIMESTAMP_MICROS"
+					},
+					{
+						"name": "dropoff_datetime",
+						"type": "TIMESTAMP_MICROS"
+					},
+					{
+						"name": "PULocationID",
+						"type": "INT64"
+					},
+					{
+						"name": "DOLocationID",
+						"type": "INT64"
+					},
+					{
+						"name": "trip_miles",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "trip_time",
+						"type": "INT64"
+					},
+					{
+						"name": "base_passenger_fare",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "tolls",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "bcf",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "sales_tax",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "congestion_surcharge",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "airport_fee",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "tips",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "driver_pay",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "shared_request_flag",
+						"type": "UTF8"
+					},
+					{
+						"name": "shared_match_flag",
+						"type": "UTF8"
+					},
+					{
+						"name": "access_a_ride_flag",
+						"type": "UTF8"
+					},
+					{
+						"name": "wav_request_flag",
+						"type": "UTF8"
+					},
+					{
+						"name": "wav_match_flag",
+						"type": "UTF8"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/stgminiproject')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ParquetsourcefilesGT')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "stgminiproject",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "green_tripdata_2023-01.parquet",
+						"container": "parquetfiles"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "VendorID",
+						"type": "INT64"
+					},
+					{
+						"name": "lpep_pickup_datetime",
+						"type": "TIMESTAMP_MICROS"
+					},
+					{
+						"name": "lpep_dropoff_datetime",
+						"type": "TIMESTAMP_MICROS"
+					},
+					{
+						"name": "store_and_fwd_flag",
+						"type": "UTF8"
+					},
+					{
+						"name": "RatecodeID",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "PULocationID",
+						"type": "INT64"
+					},
+					{
+						"name": "DOLocationID",
+						"type": "INT64"
+					},
+					{
+						"name": "passenger_count",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "trip_distance",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "fare_amount",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "extra",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "mta_tax",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "tip_amount",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "tolls_amount",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "ehail_fee",
+						"type": "INT32"
+					},
+					{
+						"name": "improvement_surcharge",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "total_amount",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "payment_type",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "trip_type",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "congestion_surcharge",
+						"type": "DOUBLE"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/stgminiproject')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ParquetsourcefilesYT')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "stgminiproject",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "yellow_tripdata_2023-01.parquet",
+						"container": "parquetfiles"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "sepal.length",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "sepal.width",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "petal.length",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "petal.width",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "variety",
+						"type": "UTF8"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/stgminiproject')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/YellowTripDataTbl')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "YellowTripData"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabase')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureSqlDatabase_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/stgminiproject')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('stgminiproject_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ETL_DF_Trip_Load')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ParquetsourcefilesYT",
+								"type": "DatasetReference"
+							},
+							"name": "YellowTaxi"
+						},
+						{
+							"dataset": {
+								"referenceName": "ParquetsourcefilesGT",
+								"type": "DatasetReference"
+							},
+							"name": "GreenTaxi"
+						},
+						{
+							"dataset": {
+								"referenceName": "ParquetsourcefilesFHHV",
+								"type": "DatasetReference"
+							},
+							"name": "FHHVTaxi"
+						},
+						{
+							"dataset": {
+								"referenceName": "ParquetsourcefilesFH",
+								"type": "DatasetReference"
+							},
+							"name": "FHTaxi"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "YellowTripDataTbl",
+								"type": "DatasetReference"
+							},
+							"name": "YelloTripdataTbl"
+						},
+						{
+							"dataset": {
+								"referenceName": "GreenTripDataTbl",
+								"type": "DatasetReference"
+							},
+							"name": "GreenTaxidataTbl"
+						},
+						{
+							"dataset": {
+								"referenceName": "FHHVTripDataTbl",
+								"type": "DatasetReference"
+							},
+							"name": "FHHVTaxidataTbl"
+						},
+						{
+							"dataset": {
+								"referenceName": "HVTripDataTbl",
+								"type": "DatasetReference"
+							},
+							"name": "FHTaxidataTbl"
+						},
+						{
+							"dataset": {
+								"referenceName": "MDL_TRIPS_FACT",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "select1"
+						},
+						{
+							"name": "derivedColumn1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          VendorID as long,",
+						"          tpep_pickup_datetime as timestamp,",
+						"          tpep_dropoff_datetime as timestamp,",
+						"          passenger_count as double,",
+						"          trip_distance as double,",
+						"          RatecodeID as double,",
+						"          store_and_fwd_flag as string,",
+						"          PULocationID as long,",
+						"          DOLocationID as long,",
+						"          payment_type as long,",
+						"          fare_amount as double,",
+						"          extra as double,",
+						"          mta_tax as double,",
+						"          tip_amount as double,",
+						"          tolls_amount as double,",
+						"          improvement_surcharge as double,",
+						"          total_amount as double,",
+						"          congestion_surcharge as double,",
+						"          airport_fee as double",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet',",
+						"     partitionBy('hash', 1)) ~> YellowTaxi",
+						"source(output(",
+						"          VendorID as long,",
+						"          lpep_pickup_datetime as timestamp,",
+						"          lpep_dropoff_datetime as timestamp,",
+						"          store_and_fwd_flag as string,",
+						"          RatecodeID as double,",
+						"          PULocationID as long,",
+						"          DOLocationID as long,",
+						"          passenger_count as double,",
+						"          trip_distance as double,",
+						"          fare_amount as double,",
+						"          extra as double,",
+						"          mta_tax as double,",
+						"          tip_amount as double,",
+						"          tolls_amount as double,",
+						"          ehail_fee as integer,",
+						"          improvement_surcharge as double,",
+						"          total_amount as double,",
+						"          payment_type as double,",
+						"          trip_type as double,",
+						"          congestion_surcharge as double",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet',",
+						"     partitionBy('hash', 1)) ~> GreenTaxi",
+						"source(output(",
+						"          hvfhs_license_num as string,",
+						"          dispatching_base_num as string,",
+						"          originating_base_num as string,",
+						"          request_datetime as timestamp,",
+						"          on_scene_datetime as timestamp,",
+						"          pickup_datetime as timestamp,",
+						"          dropoff_datetime as timestamp,",
+						"          PULocationID as long,",
+						"          DOLocationID as long,",
+						"          trip_miles as double,",
+						"          trip_time as long,",
+						"          base_passenger_fare as double,",
+						"          tolls as double,",
+						"          bcf as double,",
+						"          sales_tax as double,",
+						"          congestion_surcharge as double,",
+						"          airport_fee as double,",
+						"          tips as double,",
+						"          driver_pay as double,",
+						"          shared_request_flag as string,",
+						"          shared_match_flag as string,",
+						"          access_a_ride_flag as string,",
+						"          wav_request_flag as string,",
+						"          wav_match_flag as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> FHHVTaxi",
+						"source(output(",
+						"          dispatching_base_num as string,",
+						"          pickup_datetime as timestamp,",
+						"          dropOff_datetime as timestamp,",
+						"          PUlocationID as double,",
+						"          DOlocationID as double,",
+						"          SR_Flag as integer,",
+						"          Affiliated_base_number as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> FHTaxi",
+						"YellowTaxi select(mapColumn(",
+						"          PICKUP_DATETIME = tpep_pickup_datetime,",
+						"          DROPOFF_DATETIME = tpep_dropoff_datetime,",
+						"          PASSENGER_COUNT = passenger_count,",
+						"          TRIP_DISTANCE = trip_distance,",
+						"          PICKUP_LOCATION_ID = PULocationID,",
+						"          DROPOFF_LOCATION_ID = DOLocationID,",
+						"          FARE_AMOUNT = fare_amount,",
+						"          TIP_AMOUNT = tip_amount,",
+						"          TOTAL_AMOUNT = total_amount",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"select1 derive(TRIP_SRC = 'YELLOW TAXI',",
+						"          LOAD_DATE = currentDate('YYYY-MM-DD'),",
+						"          PICKUP_DATE = toDate(toString(PICKUP_DATETIME, 'YYYY-MM-DD'),'YYYY-MM-DD'),",
+						"          DROPOFF_DATE = toDate(toString(DROPOFF_DATETIME, 'YYYY-MM-DD'),'YYYY-MM-DD')) ~> derivedColumn1",
+						"YellowTaxi sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     truncate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> YelloTripdataTbl",
+						"GreenTaxi sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     truncate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> GreenTaxidataTbl",
+						"FHHVTaxi sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> FHHVTaxidataTbl",
+						"FHTaxi sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> FHTaxidataTbl",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          TRIP_ID as integer,",
+						"          PICKUP_DATETIME as timestamp,",
+						"          DROPOFF_DATETIME as timestamp,",
+						"          PICKUP_DATE as date,",
+						"          DROPOFF_DATE as date,",
+						"          PASSENGER_COUNT as integer,",
+						"          TRIP_DISTANCE as decimal(10,8),",
+						"          PICKUP_LOCATION_ID as integer,",
+						"          DROPOFF_LOCATION_ID as integer,",
+						"          FARE_AMOUNT as decimal(20,8),",
+						"          TIP_AMOUNT as decimal(20,8),",
+						"          TOTAL_AMOUNT as decimal(20,8),",
+						"          TRIP_SRC as string,",
+						"          LOAD_DATE as date",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     truncate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ParquetsourcefilesYT')]",
+				"[concat(variables('factoryId'), '/datasets/ParquetsourcefilesGT')]",
+				"[concat(variables('factoryId'), '/datasets/ParquetsourcefilesFHHV')]",
+				"[concat(variables('factoryId'), '/datasets/ParquetsourcefilesFH')]",
+				"[concat(variables('factoryId'), '/datasets/YellowTripDataTbl')]",
+				"[concat(variables('factoryId'), '/datasets/GreenTripDataTbl')]",
+				"[concat(variables('factoryId'), '/datasets/FHHVTripDataTbl')]",
+				"[concat(variables('factoryId'), '/datasets/HVTripDataTbl')]",
+				"[concat(variables('factoryId'), '/datasets/MDL_TRIPS_FACT')]"
+			]
+		}
+	]
+}
