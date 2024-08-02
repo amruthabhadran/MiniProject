@@ -1,5 +1,5 @@
 {
-	"name": "Copy location file",
+	"name": "ETL_PL_Passenger_Loc_File_Load",
 	"properties": {
 		"activities": [
 			{
