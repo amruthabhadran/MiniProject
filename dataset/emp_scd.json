@@ -1,0 +1,46 @@
+{
+	"name": "emp_scd",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "emp_scd_db",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "ID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Firstname",
+				"type": "varchar"
+			},
+			{
+				"name": "Lastname",
+				"type": "varchar"
+			},
+			{
+				"name": "City",
+				"type": "varchar"
+			},
+			{
+				"name": "Start_Date",
+				"type": "date"
+			},
+			{
+				"name": "end_date",
+				"type": "date"
+			},
+			{
+				"name": "active_fl",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "emp_scd"
+		}
+	}
+}

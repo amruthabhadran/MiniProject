@@ -1,0 +1,44 @@
+{
+	"name": "source_scd2_csv",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "stgminiproject",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "SCD_CSV.csv",
+				"container": "csvfiles"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "ID",
+				"type": "String"
+			},
+			{
+				"name": "Firstname",
+				"type": "String"
+			},
+			{
+				"name": "Lastname",
+				"type": "String"
+			},
+			{
+				"name": "City",
+				"type": "String"
+			},
+			{
+				"name": "Start_Date",
+				"type": "String"
+			}
+		]
+	}
+}
